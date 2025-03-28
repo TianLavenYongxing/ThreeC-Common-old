@@ -6,6 +6,7 @@ import com.alibaba.excel.read.listener.ReadListener;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,20 @@ public class ExcelImportUtils {
         EasyExcel.read(file.getInputStream(), clazz, new ReadListener<T>() {
             @Override
             public void invoke(T data, AnalysisContext context) {
+                // 反射处理所有 String 字段，去除前后空格
+                for (Field field : data.getClass().getDeclaredFields()) {
+                    if (field.getType() == String.class) {
+                        field.setAccessible(true);
+                        try {
+                            String value = (String) field.get(data);
+                            if (value != null) {
+                                field.set(data, value.trim());
+                            }
+                        } catch (IllegalAccessException e) {
+                            throw new RuntimeException("字段访问失败: " + field.getName(), e);
+                        }
+                    }
+                }
                 dataList.add(data);
             }
 
