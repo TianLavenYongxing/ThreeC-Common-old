@@ -4,14 +4,13 @@
     <parent>
         <groupId>com.threec</groupId>
         <artifactId>common</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>threec-common-redis</artifactId>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <treec.tools.version>1.0-SNAPSHOT</treec.tools.version>
     </properties>
 
     <dependencies>
@@ -22,7 +21,6 @@
         <dependency>
             <groupId>com.threec</groupId>
             <artifactId>threec-common-core</artifactId>
-            <version>${treec.tools.version}</version>
         </dependency>
     </dependencies>
 </project>
