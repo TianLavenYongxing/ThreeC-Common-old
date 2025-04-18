@@ -7,16 +7,16 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>threec-tools</module>
-        <module>threec-mybatis</module>
-        <module>threec-redis</module>
+        <module>threec-common-core</module>
+        <module>threec-common-mybatis</module>
+        <module>threec-common-redis</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <swagger.version>3.0.0</swagger.version>
+        <springdoc.openapi.ui.version>1.8.0</springdoc.openapi.ui.version>
         <spring.boot.starter.version>3.2.5</spring.boot.starter.version>
         <mybatisplus.version>3.5.5</mybatisplus.version>
         <druid.version>1.2.9</druid.version>
@@ -39,10 +39,17 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- Springdoc OpenAPI UI with Spring Web exclusion -->
             <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger2</artifactId>
-                <version>${swagger.version}</version>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-ui</artifactId>
+                <version>${springdoc.openapi.ui.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>spring-web</artifactId>
+                        <groupId>org.springframework</groupId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
