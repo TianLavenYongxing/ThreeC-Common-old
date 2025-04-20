@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.goarchery.common.core.constant.Constant;
+import com.goarchery.common.core.model.PageQueryApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +23,12 @@ public abstract class BaseServiceImpl<M extends BaseMapper<T>, T> extends Servic
     @Autowired
     protected M baseDao;
 
-    public static <T> Page<T> getPage(Map<String, Object> params) {
+    public static <T> Page<T> getPage(PageQueryApi pageQueryApi) {
         // 从请求参数中获取分页信息
-        int currentPage = Integer.parseInt(params.get(Constant.PAGE).toString());
-        int pageSize = Integer.parseInt(params.get(Constant.LIMIT).toString());
-        String orderField = (String) params.get(Constant.LIMIT);
-        String order = (String) params.get(Constant.ORDER);
+        int currentPage = pageQueryApi.getPage();
+        int pageSize = pageQueryApi.getLimit();
+        String orderField = pageQueryApi.getOrderField();
+        String order = pageQueryApi.getOrder();
         // 创建分页对象
         Page<T> page = new Page<>(currentPage, pageSize);
         if (orderField != null && order != null) {
@@ -40,18 +41,16 @@ public abstract class BaseServiceImpl<M extends BaseMapper<T>, T> extends Servic
         return page;
     }
 
+    public Page<T> page(PageQueryApi pageQueryApi,Map<String,Object> params) {
+        return null;
+    }
+
     @Transactional
     public int deleteBatchIds(List<String> ids) {
         if (ids == null || ids.isEmpty()) {
             return 0; // 如果没有 ID，返回 0
         }
         return baseDao.deleteBatchIds(ids); // 调用 DAO 中的物理删除方法
-    }
-
-    public Page<T> page(Map<String, Object> params) {
-        Page<T> page = getPage(params);
-        baseMapper.selectPage(page, null);
-        return page;
     }
 
 }

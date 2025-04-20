@@ -2,6 +2,7 @@ package com.goarchery.common.mybatis.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.goarchery.common.core.model.PageQueryApi;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,6 @@ public interface BaseService<T> extends IService<T> {
      */
     int deleteBatchIds(List<String> ids);
 
-    Page<T> page(Map<String, Object> params);
+    Page<T> page(PageQueryApi pageQuery,Map<String,Object> params);
 
 }
