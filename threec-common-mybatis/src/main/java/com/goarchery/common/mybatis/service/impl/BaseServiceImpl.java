@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 基本服务实施
@@ -25,8 +26,8 @@ public abstract class BaseServiceImpl<M extends BaseMapper<T>, T> extends Servic
 
     public static <T> Page<T> getPage(PageQueryApi pageQueryApi) {
         // 从请求参数中获取分页信息
-        int currentPage = pageQueryApi.getPage();
-        int pageSize = pageQueryApi.getLimit();
+        int currentPage = Objects.isNull(pageQueryApi.getPage())?1:pageQueryApi.getPage();
+        int pageSize = Objects.isNull(pageQueryApi.getLimit())?10:pageQueryApi.getLimit();
         String orderField = pageQueryApi.getOrderField();
         String order = pageQueryApi.getOrder();
         // 创建分页对象
