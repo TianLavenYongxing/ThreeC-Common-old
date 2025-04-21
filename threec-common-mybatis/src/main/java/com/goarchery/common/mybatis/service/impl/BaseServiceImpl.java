@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.goarchery.common.core.constant.Constant;
 import com.goarchery.common.core.model.PageQueryApi;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -20,9 +19,6 @@ import java.util.Objects;
  * @date 2024/07/12 16:42
  */
 public abstract class BaseServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, T> {
-    // todo 完善修改和逻辑删除功能 使用SecurityUserUtils获取修改人
-    @Autowired
-    protected M baseDao;
 
     public static <T> Page<T> getPage(PageQueryApi pageQueryApi) {
         // 从请求参数中获取分页信息
@@ -51,7 +47,8 @@ public abstract class BaseServiceImpl<M extends BaseMapper<T>, T> extends Servic
         if (ids == null || ids.isEmpty()) {
             return 0; // 如果没有 ID，返回 0
         }
-        return baseDao.deleteBatchIds(ids); // 调用 DAO 中的物理删除方法
+        // 调用 DAO 中的物理删除方法
+        return baseMapper.deleteBatchIds(ids);
     }
 
 }
