@@ -40,7 +40,7 @@ public class R<T> implements Serializable {
     private String msg = SUCCESS_MSG;
 
     @Schema(description = "响应数据", implementation = Object.class)
-    private T data;
+    private T result;
 
     // ========== 静态工厂方法 ========== //
 
@@ -49,11 +49,11 @@ public class R<T> implements Serializable {
     }
 
     public static <T> R<T> ok(T data) {
-        return new R<T>().setData(data);
+        return new R<T>().setResult(data);
     }
 
     public static <T> R<T> fail(int code, String msg, T data) {
-        return new R<T>().setSuccess(false).setCode(code).setMsg(msg).setData(data);
+        return new R<T>().setSuccess(false).setCode(code).setMsg(msg).setResult(data);
     }
 
     public static <T> R<T> fail() {
