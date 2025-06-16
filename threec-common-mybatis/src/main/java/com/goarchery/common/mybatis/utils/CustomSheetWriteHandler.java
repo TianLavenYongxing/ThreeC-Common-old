@@ -73,6 +73,9 @@ public class CustomSheetWriteHandler implements SheetWriteHandler {
             // 将上面设置好的下拉列表字典sheet页和目标sheet关联起来
             DataValidationConstraint constraint = helper.createFormulaListConstraint(dictSheetName);
             DataValidation dataValidation = helper.createValidation(constraint, infoList);
+            // 关键设置：启用下拉框 & 禁止非法输入
+            dataValidation.setSuppressDropDownArrow(true); // 显示下拉箭头
+            dataValidation.setShowErrorBox(true);           // 禁止非法值
             sheet.addValidationData(dataValidation);
         }
     }

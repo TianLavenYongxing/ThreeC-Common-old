@@ -1,5 +1,6 @@
 package com.goarchery.common.mybatis.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -14,6 +15,7 @@ public class BashDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Schema(description = "ID", example = "1")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
 
     @NotNull
