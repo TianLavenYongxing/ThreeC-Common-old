@@ -34,6 +34,9 @@ public abstract class BaseServiceImpl<M extends BaseMapper<T>, T> extends Servic
             } else if (Constant.DESC.equalsIgnoreCase(order)) {
                 page.addOrder(OrderItem.desc(orderField));
             }
+        }else {
+            page.addOrder(OrderItem.asc(Constant.CREATE_TIME));
+            page.addOrder(OrderItem.asc(Constant.UPDATE_TIME));
         }
         return page;
     }

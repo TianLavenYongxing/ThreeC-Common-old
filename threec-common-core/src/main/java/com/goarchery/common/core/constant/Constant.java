@@ -116,4 +116,8 @@ public interface Constant {
      * language header
      */
     String ACCEPT_LANGUAGE_HEADER="Accept-Language";
+
+    String CREATE_TIME = "create_by";
+
+    String UPDATE_TIME = "update_by";
 }
