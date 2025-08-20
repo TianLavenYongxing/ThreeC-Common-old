@@ -3,6 +3,7 @@ package com.goarchery.common.mybatis.utils;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
+import com.goarchery.common.core.utils.ExcelUtils;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
@@ -21,6 +22,14 @@ import java.util.Objects;
  */
 public class ExcelExportUtils {
 
+    // —— 公共：下载头设置 ——
+    private static void prepareDownloadHeaders(HttpServletResponse response, String fileName) {
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setCharacterEncoding("utf-8");
+        String encoded = URLEncoder.encode(fileName, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
+        response.setHeader("Content-Disposition", "attachment;filename=" + encoded + ".xlsx");
+    }
+
     /**
      * 导出 Excel 文件
      *
@@ -33,10 +42,7 @@ public class ExcelExportUtils {
      * @throws IOException IO异常
      */
     public static <T> void exportExcel(HttpServletResponse response, List<T> dataList, Class<T> clazz, String fileName, String sheetName) throws IOException {
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setCharacterEncoding("utf-8");
-        String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
-        response.setHeader("Content-Disposition", "attachment;filename=" + encodedFileName + ".xlsx");
+        prepareDownloadHeaders(response,fileName);
         EasyExcel.write(response.getOutputStream(), clazz).sheet(sheetName).doWrite(dataList);
     }
 
@@ -51,12 +57,7 @@ public class ExcelExportUtils {
      * @throws IOException IO异常
      */
     public static <T> void exportExcel(HttpServletResponse response, Map<String, List<T>> sheetDataMap, Class<T> clazz, String fileName) throws IOException {
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setCharacterEncoding("utf-8");
-
-        // 对文件名进行编码，避免中文乱码
-        String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
-        response.setHeader("Content-Disposition", "attachment;filename=" + encodedFileName + ".xlsx");
+        prepareDownloadHeaders(response,fileName);
         // 创建 ExcelWriter 对象
         ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream(), clazz).build();
         try {
@@ -64,6 +65,7 @@ public class ExcelExportUtils {
             // 写入每个sheet的数据
             for (Map.Entry<String, List<T>> entry : sheetDataMap.entrySet()) {
                 String sheetName = entry.getKey();  // 获取sheet名称
+                sheetName = ExcelUtils.safeSheetName(sheetName);
                 List<T> data = entry.getValue();    // 获取数据列表
                 // 创建WriteSheet对象
                 WriteSheet writeSheet = EasyExcel.writerSheet(sheetNo, sheetName)
@@ -93,13 +95,10 @@ public class ExcelExportUtils {
      * @throws IOException IO异常
      */
     public static <T> void exportTemplate(HttpServletResponse response, Class<T> clazz, CustomSheetWriteHandler customSheetWriteHandler, String fileName, String sheetName) throws IOException {
+        // 设置响应头
+        prepareDownloadHeaders(response,fileName);
         // 创建一个空数据列表
         List<T> emptyDataList = new ArrayList<>();
-        // 设置响应头
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setCharacterEncoding("utf-8");
-        String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
-        response.setHeader("Content-Disposition", "attachment;filename=" + encodedFileName + ".xlsx");
         if (Objects.isNull(customSheetWriteHandler)) {
             EasyExcel.write(response.getOutputStream(), clazz).sheet(sheetName).doWrite(emptyDataList);
         } else {
