@@ -4,6 +4,7 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.goarchery.common.core.utils.ExcelUtils;
+import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
@@ -103,6 +104,30 @@ public class ExcelExportUtils {
             EasyExcel.write(response.getOutputStream(), clazz).sheet(sheetName).doWrite(emptyDataList);
         } else {
             EasyExcel.write(response.getOutputStream(), clazz).registerWriteHandler(customSheetWriteHandler).sheet(sheetName).doWrite(emptyDataList);
+        }
+    }
+
+    /**
+     * 导出 byte[] 类型的 Excel 模版文件
+     *
+     * @param response HTTP 响应对象
+     * @param fileData Excel 文件的字节数据
+     * @param fileName 导出文件的名称
+     * @throws IOException 可能抛出的异常
+     */
+    public static void exportByteArrayTemplate(HttpServletResponse response, byte[] fileData, String fileName) throws IOException {
+        // 设置下载响应头
+        prepareDownloadHeaders(response, fileName);
+
+        // 获取响应输出流
+        try (ServletOutputStream out = response.getOutputStream()) {
+            // 将文件字节流直接写入响应输出流
+            out.write(fileData);
+            out.flush();
+        } catch (IOException e) {
+            // 如果写入文件出错，设置500错误响应
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            throw new IOException("Error writing file data to response.", e);
         }
     }
 }
