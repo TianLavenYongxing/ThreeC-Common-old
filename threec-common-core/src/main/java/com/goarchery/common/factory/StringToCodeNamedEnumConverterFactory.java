@@ -1,7 +1,6 @@
 package com.goarchery.common.factory;
 
 import com.goarchery.common.core.constant.CodeNamedEnum;
-import com.goarchery.common.core.utils.CodeNamedEnumUtils;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterFactory;
 
@@ -21,9 +20,8 @@ public class StringToCodeNamedEnumConverterFactory implements ConverterFactory<S
     private static final class CodeNamedBridgeConverter<E extends Enum<E> & CodeNamedEnum>
             implements Converter<String, E> {
         private final Class<E> enumType;
-        @SuppressWarnings("unchecked")
-        CodeNamedBridgeConverter(Class<?> raw) { this.enumType = (Class<E>) raw; }
-        @Override public E convert(String source) { return CodeNamedEnumUtils.from(source, enumType); }
+        @SuppressWarnings("unchecked") CodeNamedBridgeConverter(Class<?> raw){ this.enumType=(Class<E>)raw; }
+        @Override public E convert(String source){ return CodeNamedEnum.fromString(enumType, source); }
     }
 
     private static final class NameOnlyConverter<E extends Enum<E>>
