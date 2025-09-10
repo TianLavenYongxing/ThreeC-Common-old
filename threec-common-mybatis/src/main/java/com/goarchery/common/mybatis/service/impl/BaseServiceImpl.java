@@ -6,11 +6,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.goarchery.common.core.constant.Constant;
 import com.goarchery.common.core.model.PageQueryApi;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 基本服务实施
@@ -20,38 +17,23 @@ import java.util.Objects;
  */
 public abstract class BaseServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, T> {
 
-    public static <T> Page<T> getPage(PageQueryApi pageQueryApi) {
-        // 从请求参数中获取分页信息
-        int currentPage = Objects.isNull(pageQueryApi.getPage())?1:pageQueryApi.getPage();
-        int pageSize = Objects.isNull(pageQueryApi.getLimit())?10:pageQueryApi.getLimit();
-        String orderField = pageQueryApi.getOrderField();
-        String order = pageQueryApi.getOrder();
-        // 创建分页对象
+    public static <T, Q extends PageQueryApi> Page<T> getPage(Q pageQueryApi) {
+        int currentPage = Optional.ofNullable(pageQueryApi.getPage()).orElse(1);
+        int pageSize    = Optional.ofNullable(pageQueryApi.getLimit()).orElse(10);
+        String orderField = (pageQueryApi.getOrderField() == null || pageQueryApi.getOrderField().isBlank())
+                ? "id"
+                : pageQueryApi.getOrderField();
+        String order = (pageQueryApi.getOrder() == null || pageQueryApi.getOrder().isBlank())
+                ? "asc"
+                : pageQueryApi.getOrder();
+
         Page<T> page = new Page<>(currentPage, pageSize);
-        if (orderField != null && order != null) {
-            if (Constant.ASC.equalsIgnoreCase(order)) {
-                page.addOrder(OrderItem.asc(orderField));
-            } else if (Constant.DESC.equalsIgnoreCase(order)) {
-                page.addOrder(OrderItem.desc(orderField));
-            }
-        }else {
-            page.addOrder(OrderItem.asc(Constant.CREATE_TIME));
-            page.addOrder(OrderItem.asc(Constant.UPDATE_TIME));
+        if (Constant.ASC.equalsIgnoreCase(order)) {
+            page.addOrder(OrderItem.asc(orderField));
+        } else if (Constant.DESC.equalsIgnoreCase(order)) {
+            page.addOrder(OrderItem.desc(orderField));
         }
         return page;
-    }
-
-    public Page<T> page(PageQueryApi pageQueryApi,Map<String,Object> params) {
-        return null;
-    }
-
-    @Transactional
-    public int deleteBatchIds(List<String> ids) {
-        if (ids == null || ids.isEmpty()) {
-            return 0; // 如果没有 ID，返回 0
-        }
-        // 调用 DAO 中的物理删除方法
-        return baseMapper.deleteBatchIds(ids);
     }
 
 }
