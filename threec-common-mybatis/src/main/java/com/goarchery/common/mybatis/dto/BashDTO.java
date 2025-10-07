@@ -20,7 +20,7 @@ public class BashDTO implements Serializable {
 
     @NotNull
     @Schema(description = "删除标志（0已删除，1未删除）", example = "1")
-    private boolean delFlag;
+    private Boolean delFlag;
 
     @Schema(description = "乐观锁", example = "1")
     private Integer version;
