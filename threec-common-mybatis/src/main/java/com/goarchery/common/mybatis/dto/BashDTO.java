@@ -18,7 +18,6 @@ public class BashDTO implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
 
-    @NotNull
     @Schema(description = "删除标志（0已删除，1未删除）", example = "1")
     private Boolean delFlag;
 
