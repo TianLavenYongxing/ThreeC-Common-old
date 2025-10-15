@@ -24,7 +24,7 @@ public abstract class BaseServiceImpl<M extends BaseMapper<T>, T> extends Servic
                 ? "id"
                 : pageQueryApi.getOrderField();
         String order = (pageQueryApi.getOrder() == null || pageQueryApi.getOrder().isBlank())
-                ? "asc"
+                ? "desc"
                 : pageQueryApi.getOrder();
 
         Page<T> page = new Page<>(currentPage, pageSize);
