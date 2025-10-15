@@ -28,6 +28,6 @@ public class PageQueryApi {
     @Pattern(regexp = "(?i)asc|desc")
     @JsonSetter(nulls = Nulls.SKIP)
     @Parameter(description = "排序方式，可选值(asc、desc)")
-    private String order = "asc";
+    private String order = "desc";
 
 }
